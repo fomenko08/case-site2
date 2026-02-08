@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Кейсы Standoff с картинками</title>
+<style>
+body {
+  background:#0f1115;
+  color:white;
+  font-family:Arial;
+  text-align:center;
+}
+h1 { margin-top:20px; }
+
+.case {
+  width:360px;
+  height:90px;
+  border:3px solid #ffcc00;
+  margin:30px auto;
+  overflow:hidden;
+  position:relative;
+  background:#1b1e24;
+}
+.line {
+  position:absolute;
+  left:50%;
+  top:0;
+  width:3px;
+  height:100%;
+  background:red;
+}
+.items {
+  display:flex;
+  position:absolute;
+  left:0;
+  transition:left 2.5s cubic-bezier(.1,.6,0,1);
+}
+.item {
+  min-width:100px;
+  line-height:90px;
+  border-right:1px solid #333;
+  font-weight:bold;
+}
+button {
+  padding:12px 25px;
+  font-size:18px;
+  cursor:pointer;
+  background:#ffcc00;
+  border:none;
+  border-radius:6px;
+}
+#result {
+  margin-top:20px;
+  font-size:20px;
+  font-weight:bold;
+}
+</style>
+</head>
+<body>
+
+<h1>🎁 Открытие кейса</h1>
+
+<div class="case">
+  <div class="line"></div>
+  <div class="items" id="items"></div>
+</div>
+
+<button onclick="openCase()">Открыть кейс</button>
+
+<h2 id="result"></h2>
+
+<script>
+// массив скинов (онлайн картинки)
+const drops = [
+  {name:"Common Skin", img:"https://i.imgur.com/3Oa2V2Q.png", chance:50},
+  {name:"Rare Skin", img:"https://i.imgur.com/4K7DqzU.png", chance:30},
+  {name:"Epic Skin", img:"https://i.imgur.com/3v5k1nB.png", chance:15},
+  {name:"Legendary Skin", img:"https://i.imgur.com/0WlH4sD.png", chance:5}
+];
+
+function randomDrop() {
+  let r = Math.random()*100;
+  let sum = 0;
+  for (let d of drops) {
+    sum += d.chance;
+    if (r <= sum) return d;
+  }
+}
+
+function openCase() {
+  const items = document.getElementById("items");
+  items.innerHTML = "";
+  document.getElementById("result").textContent = "";
+
+  let win;
+  for (let i=0;i<30;i++) {
+    const d = randomDrop();
+    if (i === 25) win = d; // выпавший скин
+    const div = document.createElement("div");
+    div.className = "item";
+
+    // вставляем картинку
+    const img = document.createElement("img");
+    img.src = d.img;
+    img.style.width = "100px";
+    img.style.height = "90px";
+    div.appendChild(img);
+
+    items.appendChild(div);
+  }
+
+  items.style.left = "0px";
+  setTimeout(()=>{
+    items.style.left = "-3000px";
+  },50);
+
+  setTimeout(()=>{
+    document.getElementById("result").textContent =
+      "Выпало: " + win.name;
+  },2600);
+}
+</script>
+
+</body>
+</html>
